@@ -1,0 +1,6 @@
+1. 3h
+2. Helppoa oli ennalta opitut asiat
+3. sisäluokkien käyttöä koodissa
+4. Tein uuden asunto sisäluokan rakennukseen koska rakenne piti olla Tontti-Rakennus-Asukas, mutta todellisuudessa rakenne on Tontti-Rakennus-Asunto-Asukas.
+En käyttänyt periytymistä ollenkaan, koska Rakennuksen tyypillä ei ollut merkitystä koodin suorittamisen kannalta periaatteessa siis Rakennus = Omakotitalo = Rivitalo = Kerrostalo
+rakennuksen koodi olisi pitänyt vain kopioida kaikkiin rakennustyyppeihin (ja aliluokka asunto) jolloin koodista olisi tullut 3 kertaa pitempi.

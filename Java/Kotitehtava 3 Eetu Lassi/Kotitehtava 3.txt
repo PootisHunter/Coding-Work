@@ -1,0 +1,10 @@
+1. Työhön käytin noin 5 tuntia.
+2. Tehtävässä vanhat asiat olivat helppoja ja uudet asiat (periytyminen ja dynaaminen sidonta olivat vaikeita).
+3. opin käyttämään periytymistä ja dynaamista sidontaa
+4. Tehtävässä tehdyt suunnitteluratkaisut
+
+tilauksen hinta attribuutti siirrettiin alaluokkiin, jolloin siitä voi tehdä private attribuutin
+
+käytettiin @override dynaamiseen sidontaan ja luotiin yläluokkaan tyhjiä methodeja.
+
+konstructori ei tarvitse tyhjiä parametreja jos luodaan parametriton tyhjä konstructori

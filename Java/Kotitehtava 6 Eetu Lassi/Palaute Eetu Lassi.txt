@@ -1,0 +1,5 @@
+1. 3h
+2. Helppoa oli Sanalista ja Hirsipuu luokat, vaikeaa oli Main luokan rakenteen selvittely
+3. String ja char methodeja.
+4. Hirsipuu konstructori ei ota sanalistaa argumentiksi, vaan tiedoston sillä hirsipuu koostuu sanalistasta, jolloin ei tarvitse tehdä omaa sanalista oliota.
+Syötteiden tarkistus: Ottaa ensimmäisen kirjaimen syötteestä jos se ei ole kirjain antaa väärän arvauksen. 

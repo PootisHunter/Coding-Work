@@ -1,0 +1,5 @@
+1. Tehtävään kului noin 3 tuntia
+2. Helppoa oli ennestään opetetut asiat (kooste, metodit, konstruktio)
+Vaikeaa oli asiat joita ei ollut vielä opittu (Arraylist, Tiedon säilöntä)
+3. Opin käyttämään arraylistoja ja vielä sublistoja tietojen säilömiseen ja säilötyn tiedon tulostamiseen
+4. Korjattu tiedosto: käyttää Insurance infoa oliota taulukon sijasta.

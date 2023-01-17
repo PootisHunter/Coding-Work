@@ -1,0 +1,4 @@
+1. 6 tuntia
+2. Helppoa oli edellisessä tehtävässä getter ja setter luonti, Vaikeaa oli loopit
+3. Loopit luokista
+4. Tehtävän anto jäi epäselväksi, tuliko tontille tehdä lista, johon menee vain yksi rakennu ja rakennukseen lista johon menee annettu määrä asukkaita?.
