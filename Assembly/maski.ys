@@ -1,0 +1,17 @@
+main:
+    irmovq $4095,%r8
+    irmovq $61440,%rbx
+    irmovq $1,%rcx
+    andq %r13,%r8
+    andq %r13,%rbx
+    rrmovq %rbx,%r13
+loop:
+    addq %rcx,%rdx
+    irmovq $4096,%r9
+    subq %r9,%rbx
+    je end
+    jmp loop
+end:
+    rrmovq %rdx,%r14
+    rrmovq %r8,%r13
+    halt

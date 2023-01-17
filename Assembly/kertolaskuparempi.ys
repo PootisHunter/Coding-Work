@@ -1,0 +1,16 @@
+main:
+    irmovq $0,%rdx # nolla
+    irmovq $1,%r9  # 1 bitti
+loop:
+    rrmovq %r9,%r10 # välimuisti
+    andq %r12,%r10
+    subq %rdx,%r10  
+    jne kerto
+    jmp tuplaus
+kerto:
+    addq %r11,%rax
+tuplaus:
+    addq %r11,%r11
+    addq %r9,%r9
+    jmp loop
+

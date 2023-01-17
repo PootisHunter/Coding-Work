@@ -1,0 +1,44 @@
+# Execution begins at address 0 
+.pos 0
+irmovq $9216,%r12
+main:
+    irmovq $0,%rdx
+    irmovq $32768,%rbx
+    rrmovq %rbx,%rcx
+    
+    subq %r12,%rcx
+    jg loop
+    jmp loopi
+loop:
+    rrmovq %rbx,%rcx
+    subq %r12,%rcx
+    jg jakokaksi
+    irmovq $0,%rcx
+    jmp loopi
+loopi:
+    rrmovq %rbx,%rdx
+    rrmovq %r12,%r9
+    addq %rcx,%rdx
+    rrmovq %rdx,%rax
+    subq %rdx,%r9
+    jge iffis
+    subq %r8,%rdx
+    jne loopi
+jakokaksi:
+    rrmovq %rbx,%rdi
+    irmovq $0,%rax
+    jmp jakokaks
+jakokaks:
+    irmovq $1,%r8
+    irmovq $4,%rsi
+    addq %r8,%rax
+    subq %rsi,%rdi
+    jge jakokaks
+    subq %r8,%rax
+    rrmovq %rax,%rbx
+    jmp loop
+iffis:
+    halt
+end:
+    halt
+    

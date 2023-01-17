@@ -1,0 +1,20 @@
+main:
+    irmovq $1,%r8
+    irmovq $0,%r9
+loop:
+    popq %rdx
+    addq %rdx,%rax
+    addq %r8,%r9
+    rrmovq %rsp,%rbx
+    subq %rbp,%rbx
+    jne loop
+    jmp end
+end:
+jako:
+    addq %r8,%rdi
+    subq %r9,%rax
+    jg jako
+    subq %r8,%rdi
+    rrmovq %rdi,%rax
+    halt
+    

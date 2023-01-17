@@ -1,0 +1,23 @@
+# Execution begins at address 0 
+main:
+    irmovq $0,%rsi
+    irmovq $0,%rdi
+    irmovq $8,%r10
+    popq %rax
+    rrmovq %rax,%rsi
+    rrmovq %rax,%rdi
+loop:
+    irmovq $0,%rax
+    popq %rax
+    rrmovq %rsi,%r8
+    subq %rax,%r8
+    cmovge %rax,%rsi
+    rrmovq %rdi,%r9
+    subq %rax,%r9
+    cmovle %rax,%rdi
+    rrmovq %rsp,%rcx
+    subq %rbp,%rcx
+    jne loop
+    jmp end
+end:
+    halt

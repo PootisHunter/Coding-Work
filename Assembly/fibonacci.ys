@@ -1,0 +1,237 @@
+# TKJ-harjoitustyö 2022 Fibonacci          // sisaltää ä ö!!!
+# Eetu Lassi, Y63258626, elassi21@student.oulu.fi
+#
+# käskyjen määrä on noin 9000 väärin menneiden vastausten perusteella
+#
+# fibonacci on optimoitu käyttäen kerto ja neliöjuuri funktioita joiden looppien määrä
+# on riippuvaiden loopin lopettavan maksimi arvon bittien määrästä
+#
+# Kertolaskulla luku maksimi arvo on 8388607 joka vastaa 23 bittiä eli kertolasku
+# tekee noin 23 looppia kertoessa laskuja yhteen kertolaskua jos kertolaskun halutaan
+# toimimaan vähemmällä määrillä käskyjä joutuu käyttää pienempää maksimi arvoa valitsin
+# maksimi arvon siksi koska 5*1000*1000 on 5 miljoonaa jolloin arvo riittää vielä senkin laskemiseen
+# kertolasku toimii peasant multiplication algoritmin avulla ja on todella tehokas mielestäni
+#
+# Neliöjuuren bitshiftaus vasemmalle toimii samalla tavalla että looppeja tehdään maksimi
+# arvon bittien verran joka oli 16777215 eli 24 bittiä valitsin arvon, koska se oli 23 seuraava parillinen
+# arvo kahden bitin shiftausta varten
+#
+# neliöjuuri shiftaus toimii vertaamalla lukua alkaen 100 bitillä, jos kolmannessa kohdassa on 1 bitti niin
+# kirjoitetaan ensimmäiseen kohtaan 1 bitti muuten bitistä tulee 0 ja molempia bittejä kasvatetaan ja vertaillaan taas 1000 onko neljännessä
+# kohdass 1 bitti jos on niin laitetaan kohtaan 2. 1 bitti jne.
+#
+# kaikkiaan omasta mielestäni algoritmit ovat tehokkaita sillä bitti koon ja looppi koon kasvaessa 1 maksimi arvo tuplaantuu.
+# koodi on hyvin kommentoitu siinä kerrotaan mitä tapahtuu fibonacci aikana.
+# nollaukset saattavat olla turhia mutta niillä varmistetaan ettei arvot sekoita funktioita.
+# Tästä alkaa koodi
+main:
+    irmovq pino,%rsp    # pino-osoitin
+    irmovq pino,%rbp    # pinon alkuosoite
+fibo:
+    irmovq $0,%rax      #katsotaan onko numero nolla jos ei ni laskemaan
+    mrmovq (%r11), %r9  #arvo r9
+    rrmovq %r9, %rdx    # arvo muistiin keskeytykselle
+    rrmovq %r9, %r8     #arvosta kopio r8
+    subq %rax,%r8       #katsotaan ettei ole nolla
+    je nfiboend
+    rrmovq %r9,%r8      #uusi kopio
+    call kerto          #kerrotaan r9 ja r8 eli x*x
+    rrmovq %rax, %r8    #siirretaan vastaus r8
+    irmovq $5, %r9      #vakio 5 r9
+    irmovq $0,%rax      #nollataan rax
+    call kerto          #kerrotaan r8 r9 eli (x*x) * 5
+vaiheB:                 #testataan onko luku x*x*5+4 fibonacci luku
+    rrmovq %rax,%rbx
+    irmovq $4,%rax  # 4  +  x*x*5
+    addq %rax,%rbx      #rbx = 4+x*x*5
+    rrmovq %rbx, %r12   #kopio neliojuurta varten
+    irmovq $0,%rax      #nollataan tarpeettomat
+    irmovq $0,%rcx
+    irmovq $0,%r8
+    irmovq $0,%r9
+    irmovq $0,%r10
+    irmovq $0,%r14
+    call neliojuuri     #neliojuuri r12 olevalle arvolle              
+    irmovq $0,%r10      #nollataan arvoja
+    irmovq $0,%r13
+    irmovq $0,%r14
+    rrmovq %rcx, %r8    #siirretaan neliojuuren vastaus r8 ja r9
+    rrmovq %rcx, %r9
+    call kerto          #kerrotaan r8 ja r9
+    subq %rbx,%rax      #vahennetaan %rax %rbx
+    je valmisseuraavaan # jos samat niin uutta numeroa
+    jmp toinenluku      # muuten testataan toinen luku
+    
+toinenluku:             # testataan onko luku x*x*5-4 Fibonacci luku
+    irmovq $0,%rcx      #nollaus
+    irmovq $0,%rax
+    irmovq $0,%r8
+    irmovq $0,%r9
+    irmovq $0,%r10
+    irmovq $0,%r14
+    irmovq $8,%r8       #rax = 4+x*x*5 - 8 = 5*x*x-4
+    subq %r8,%rbx      
+    rrmovq %rbx,%r12
+    irmovq $0,%r8       #nollaus
+    call neliojuuri
+    irmovq $0,%r10      #nollataan arvoja
+    irmovq $0,%r13
+    irmovq $0,%r14
+    rrmovq %rcx, %r8    #siirretaan neliojuuren vastaus r8 ja r9
+    rrmovq %rcx, %r9
+    call kerto          #kerrotaan r8 ja r9
+    subq %rbx,%rax      #vahennetaan %rax %rbx
+    je valmisseuraavaan
+    jmp keskeytyshyppy
+    
+valmisseuraavaan:
+    irmovq $8,%r8
+    irmovq $0,%rcx
+    irmovq $0,%r9
+    irmovq $0,%r10
+    irmovq $0,%r14
+    addq %r8,%r11
+    jmp fibo
+
+keskeytyshyppy: # palautetaan rax ja halt
+    rrmovq %rdx,%rax
+    halt
+    
+nfiboend:   # numero nolla lopetetaan ja palautetaan nolla
+    irmovq $0,%rax
+    halt
+    
+.pos 0x400
+neliojuuri:
+    irmovq $0,%rsi  # nolla vakio
+    irmovq $4194304,%rax #maksimi 1 << 22 bit arvo
+bitwhile:
+    rrmovq %rax,%rcx
+    subq %r12,%rcx  #katsotaan onko bit > num
+    jg bitshifta  #jos on niin alustusbit loopiin
+    irmovq $0, %rcx # alustus rcx res
+loopi: #jos ei niin suoraan seuraavaan looppiin
+    irmovq $0,%r8
+    rrmovq %rax, %r9
+    subq %r8,%r9
+    je end
+    irmovq $0, %r14 # alustus r8 res + bit
+    addq %rax,%r14  # r14 + bit
+    addq %rcx,%r14  #r14 + res
+    rrmovq %r12,%r13 # num muistiin
+    subq %r14,%r13  #num - (res + bit) jos > iffis 
+    jge iffis
+    jmp else
+iffis: # if lause
+    subq %r14,%r12
+res_update: # res paivitys
+    jmp resshifta
+bitupdate:
+    jmp bitshift
+else:
+    jmp resshift
+end:
+    ret
+bitshifta:
+    irmovq $0,%rdi
+    rrmovq %rax,%r10
+    call alustusbitkaksshift
+    jmp bitwhile
+bitshift:
+    irmovq $0,%rdi
+    rrmovq %rax,%r10
+    call alustusbitkaksshift
+    jmp loopi
+resshift:
+    irmovq $0,%rdi
+    rrmovq %rcx,%r10
+    call alustusbityksshift
+    jmp bitshift
+resshifta:
+    irmovq $0,%rdi 
+    rrmovq %rcx,%r10
+    call alustusbityksshift
+    addq %rax,%rcx
+    jmp bitupdate
+     
+.pos 0x600
+alustusbitkaksshift:
+    irmovq $0x0004, %r13 #alustus 4 r13 koska 2 bit siirto
+    irmovq $0x0001, %r14 #alustus 1 r11 
+    irmovq $16777215,%r8 #maksimi 24 bit arvo
+    irmovq $0, %rdi # vastaus alustus
+    jmp bitkaksshift
+bitkaksshift:           #shiftataan r10 bittia annetulla arvolla
+    irmovq $0, %r9            # alustus r9
+    rrmovq %r13, %r9         # r13 r9
+    subq %r8, %r9              #katsotaan onko menty rajan yli
+    jg loppushiftkaks           # jos on niin loppuun
+    rrmovq %r13,%r9         #r13  r9  uudestaan
+    andq %r10,%r9         
+    subq %rsi,%r9               #katsotaan onko bitti 0
+    je tuplauskaks          #jos bitti 0 niin tuplaus muuten myos lisays
+    jmp lisayskaks
+lisayskaks:
+    addq %r14,%rdi          #lisataan bitti arvo vastaukseen
+    jmp tuplauskaks
+tuplauskaks:
+    addq %r13,%r13      #tuplataan r13
+    addq %r14,%r14      #tuplataan r11
+    jmp bitkaksshift      #uus shifti
+loppushiftkaks:
+    rrmovq %rdi,%rax
+    ret
+    
+.pos 0x800
+kerto:           # r9 * r8
+    irmovq $0,%rsi # nolla vakio
+    irmovq $1,%r14  # 1 bitti tarkistukseen
+    irmovq $8388607,%rcx # 21 1 bitti   
+aloop:
+    rrmovq %r14,%r10 # välimuisti
+    subq %rcx,%r10      # loppu check
+    jge seuraava
+    rrmovq %r14,%r10 # välimuisti
+    andq %r9,%r10     #bitti vertailu
+    subq %rsi,%r10   #jos r10 on 0 niin tuplaus muuten lisataan luku
+    jne akerto
+    jmp atuplaus
+akerto:             #lisataan bittin arvo rax
+    addq %r8,%rax
+atuplaus:           # kasvatatetaan kerrottavaa ja tarkistus bitt
+    addq %r8,%r8
+    addq %r14,%r14
+    jmp aloop
+seuraava:
+    ret 
+
+.pos 0x300
+alustusbityksshift:
+    irmovq $2, %r13 #alustus 2 r13 koska 1 bit siirto
+    irmovq $1, %r14 #alustus 1 r11 
+    irmovq $16777215,%r8 #maksimi 24 bit arvo
+    irmovq $0, %rdi # vastaus alustus
+bityksshift:           #shiftataan r10 bittia annetulla arvolla
+    irmovq $0, %r9            # alustus r9
+    rrmovq %r13, %r9         # r13 r9
+    subq %r8, %r9              #katsotaan onko menty rajan yli
+    jg loppushiftyks           # jos on niin loppuun
+    rrmovq %r13,%r9         #r13  r9  uudestaan
+    andq %r10,%r9         
+    subq %rsi,%r9               #katsotaan onko bitti 0
+    je tuplausyks          #jos bitti 0 niin tuplaus muuten myos lisays                  
+lisaysyks:
+    addq %r14,%rdi          #lisataan bitti arvo vastaukseen
+tuplausyks:
+    addq %r13,%r13      #tuplataan r13
+    addq %r14,%r14      #tuplataan r11
+    jmp bityksshift      #uus shifti
+loppushiftyks:
+    rrmovq %rdi,%rcx
+    ret
+    
+.pos 0x700
+array:
+
+.pos 0x900
+pino:

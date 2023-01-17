@@ -1,0 +1,49 @@
+main:
+    irmovq $1,%r8
+loop:
+    addq %r8,%rax
+    subq %rsi,%rdi
+    jg loop
+    subq %r8,%rax
+    halt
+
+
+
+irmovq $0,%rax
+    pushq %rax
+    irmovq $2,%rax
+    pushq %rax
+    irmovq $8,%rax
+    pushq %rax
+    irmovq $32,%rax
+    pushq %rax
+    irmovq $128,%rax
+    pushq %rax
+    irmovq $512,%rax
+    pushq %rax
+    irmovq $2048,%rax
+    pushq %rax
+    irmovq $8192,%rax
+    pushq %rax   #36...
+
+
+ 
+    
+    irmovq $0,%rax
+    pushq %rax
+    irmovq $1,%rax
+    pushq %rax
+    irmovq $4,%rax
+    pushq %rax
+    irmovq $16,%rax
+    pushq %rax
+    irmovq $64,%rax
+    pushq %rax
+    irmovq $256,%rax
+    pushq %rax
+    irmovq $1024,%rax
+    pushq %rax
+    irmovq $4096,%rax
+    pushq %rax
+    irmovq $16384,%rax
+    pushq %rax    
