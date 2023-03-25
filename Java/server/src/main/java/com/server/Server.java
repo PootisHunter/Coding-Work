@@ -58,8 +58,8 @@ public class Server {
 
     private static SSLContext serverSSLContext(String [] args) throws Exception{
 
-        String password = "Tyyty001";
-        String path = "D:/Ohjelmointi/Ohjelmointi 3/group-0106-project/group-0106-project/server/src/main/java/com/server/keystore.jks";
+        String password = "password";
+        String path = "path";
 
         if(args.length >= 2){
             password = args[1];
