@@ -1,3 +1,3 @@
-# School-work
+# Coding-work
 
-School work and other coding stuff
+Coding work done in school and in free time
