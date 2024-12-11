@@ -1,0 +1,68 @@
+# Module Configuration
+# Can be a course, subpart of the course, CTF competition, or something else.
+
+# UUIDv7
+identifier = "01908498-ac98-708d-b886-b6f2747ef785"                              # mandatory
+name = "Cybersecurity"                                                           # mandatory
+description = "A comprehensive course covering various aspects of cybersecurity"
+# We likely need to think this further. If some task is changed, this should be changed as well.
+version = "0.0.1" # mandatory
+
+# Domains are the main sections of the course
+# For a more general setting, we use word "category" instead of "week" or "module"
+[[categories]]
+number = 1                             # mandatory
+name = "Introduction to Cybersecurity"
+
+[[categories.tasks]]
+# Tasks can be a single whole task or tasks with stages (sub-parts like a, b c)
+id = "task001"                                              # mandatory
+name = "Challenge 1"                                        # mandatory
+description = "Exploit few buffer overflow vulnerabilities"
+# Note the float type here
+points = 1.0 # mandatory
+
+stages = [{ flag = { kind = "pure_random" } }]
+
+[categories.tasks.build]
+# Directory where the task configuration files are located
+# Can be symbolic link to the actual task directory as well
+directory = "/mnt/d/Ohjelmointi/Python/Introduction101//Week1/"
+builder = { shell = {} }                      # Shell builder without entrypoint
+# Default is entrypoint.sh, but we could override it
+# builder = { shell = { entrypoint = "my_entrypoint.sh" } }
+
+
+[[categories.tasks.build.output]]
+# Specific kind of resource; instruction for the assignment and should be used as it is
+# It includes something that is expected to be different for every user doing the tasks, and as so it is needed here
+# Probably optionally generate file or as string from the builder
+kind = { readme = "readme.txt" }
+
+[flag_types]
+pure_random = { length = 32 } # default 32
+# Secret is required so that the flag can be deterministic based on the user, but it should not be possible to guess
+# Secret in here should be identifier for secret in vault software, instead of storing it directly here...
+# Key must be 32 bytes at least, NOTE that in concatenation!
+# Too long key has diminishing returns, note that SHA3-256 internal bit rate aka block size is 1088 bits
+user_derived = { algorithm = "HMAC_SHA3_256", secret = "6b2c0c4535ea5b7c7f4fc603a738840fce80e0c8e2632f139f1aa9d27f540f15" }
+# Rng seed derived from the user and possibly from secret, provided for the build system in case the required answer is something
+# which cannot be represented with random-looking flag
+rng_seed = { secret = "You must know me to predict the seed of the other users" }
+
+[deployment]
+build_timeout = 300 # seconds
+
+[deployment.upload]
+AWS_S3_ENDPOINT = "https://a3s.fi"
+AWS_REGION = "us-west-2"                   # Something to make AWS SDK happy
+BUCKET_NAME = "hardware-software-security"
+# Whether to use pre-signed URLs for the uploads with lifetime
+# If not set, *all* uploaded files in the bucket are public and not tied to expiration or access token
+# As long as someone knows the object key, they can download the file.
+USE_PRE_SIGNED = false
+# Days when the link is valid for the user
+LINK_EXPIRATION = 7 # 7 days is currently the maximum policy for AWS S3, if you need more, use public files
+# Days when the files are automatically deleted from the storage
+FILE_EXPIRATION = 21 # In days - TODO currently just manual use
+# Credentials are stored in the environment variables
